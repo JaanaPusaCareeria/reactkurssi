@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+// importataan App App.js-tiedosto
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// Täältä renderöidään App public-kansion index.html-tiedoston bodyyn "root" -diviin
 ReactDOM.render(
   <React.StrictMode>
     <App />
