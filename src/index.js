@@ -8,7 +8,9 @@ import reportWebVitals from './reportWebVitals';
 // Täältä renderöidään App public-kansion index.html-tiedoston bodyyn "root" -diviin
 ReactDOM.render(
   <React.StrictMode>
+
     <App />
+    
   </React.StrictMode>,
   document.getElementById('root')
 );

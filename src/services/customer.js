@@ -1,6 +1,7 @@
 // Tämän tiedoston tehtävänä on axios-kirjaston avulla tehdä backendiin kohdistuvia http-pyyntöjä
 // Axios muuntaa automaattisesti javascriptin JSONiksi ja toisinpäin
 // Ne voisi olla myös muissa tiedostoissa
+// tätä tiedostoa ei koskaan piirretä näytölle, tämä tekee vain backendpyynnöt ja tätä käytetään muualta ohjelmasta
 import axios from 'axios'
 
 // Mistä tietää, mikä osoite pitää laittaa tähän? Nyt se on otettu rest-projektin kautta..
@@ -13,5 +14,15 @@ const getAll = () => {
     return request.then(response => response.data)
 }
 
+// tänne lähetetään parametrina newCustomer (sen voisi laittaa myös sulkeisiin)
+// ensimmäinen parametri on mihin lähetetään (baseUrl) ja sitten mitä lähetetään (newCustomer)
+const create = newCustomer => {
+    return axios.post(baseUrl, newCustomer)
+}
 
-export default getAll
+// deletessä on vain yksi parametri, koko url johon tässä liitettynä id eli esim northwind/customers/AAAYY
+const remove = id => axios.delete(`${baseUrl}/${id}`)
+
+// eslint-disable-next-line
+export default { getAll, create, remove }
+

@@ -17,11 +17,11 @@ const Kello = ({ koko }) => {
         }
     }, [])
 
-    return () => {
+    return (
         <div className="kello">
             <Clock value={value} size={koko} />
         </div>
-    }
+    )
 }
 
 export default Kello
