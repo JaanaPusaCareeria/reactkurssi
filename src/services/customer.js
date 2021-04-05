@@ -23,6 +23,12 @@ const create = newCustomer => {
 // deletessä on vain yksi parametri, koko url johon tässä liitettynä id eli esim northwind/customers/AAAYY
 const remove = id => axios.delete(`${baseUrl}/${id}`)
 
+// put pyyntö backendille, ensimmäisenä parametrina url-osoite eli koko url northwind/customer/customerid ja toisena parametrinä se, mitä laitetaan 
+// body-osaaan put pyyntöön eli changedCustomer eli koko muokattu customer-objektic
+const update = changedCustomer => {
+    return axios.put(`${baseUrl}/${changedCustomer.customerId}`, changedCustomer)
+}
+
 // eslint-disable-next-line
-export default { getAll, create, remove }
+export default { getAll, create, remove, update }
 
