@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import '../App.css'
-import LoginService from '../services/login.js'
-import Login from './Login.jsx'
-import LoginAdd from './LoginAdd.jsx'
+import LoginService from '../services/login'
+import Login from './Login'
+import LoginAdd from './LoginAdd'
 import Message from '../Message'
 
 const LoginList = () => {
 
-    const [logins, setLogins] = useState([]) //tietotyyppi on taulukko
+    const [logins, setLogins] = useState([]) // tietotyyppi on taulukko
     const [lisäysTila, setLisäystila] = useState(false)
-    
+
     const [showMessage, setShowMessage] = useState(false)
     const [isPositive, setIsPositive] = useState(false)
     const [message, setMessage] = useState('')
@@ -18,103 +18,114 @@ const LoginList = () => {
         LoginService
             .getAll()
             .then(data => {
+                console.log(data)
                 setLogins(data)
             })
     }, [lisäysTila])
 
-    // tämä ajetaan, kun ollaan poistamassa käyttäjää
+    // Tämä ajetaan kun ollaan poistamassa käyttäjää
     const handleDeleteClick = id => {
 
-        // kaivetaan esiin koko login-olio, jotta alertissa voidaan näyttää käyttäjänimi id:n sijaan
+        //Kaivetaan esiin koko login olio jotta alertissa voidaan näyttää companyName id:n sijaan
         const login = logins.find(login => login.loginId === id)
 
-        //Poiston varmistus -kyselyikkuna
-        const confirm = window.confirm(`Haluatko todella poistaa: ${login.userName}:n pysyvästi?`)
+        // Poiston varmistus kyselyikkuna
+        const confirm = window.confirm(`Haluatko todella poistaa: ${login.username}:n pysyvästi?`)
 
         if (confirm) {
 
             LoginService.remove(id)
-            .then(response => {
-                if (response.status === 200) {
-               
-                    setLogins(logins.filter(filtered => filtered.loginId !== id))
-                    
-                    setMessage(`${login.userName}:n poisto onnistui!`)
-                    setIsPositive(true)
+                .then(response => {
+
+                    if (response.status === 200) {
+                        // Poistetaan login statesta
+                        setLogins(logins.filter(filtered => filtered.loginId !== id))
+
+                        setMessage(`${login.username}:n poisto onnistui!`)
+                        setIsPositive(true)
+                        setShowMessage(true)
+                        window.scrollBy(0, -10000) // Scrollataan ylös jotta nähdään alert :)
+
+                        setTimeout(() => {
+                            setShowMessage(false)
+                        }, 4000
+                        )
+                    }
+
+                })
+
+                .catch(error => {
+                    console.log(error)
+                    setMessage(`Tapahtui virhe: ${error}`)
+                    setIsPositive(false)
                     setShowMessage(true)
-                    window.scrollBy(0, -10000) //scrollataan ikkuna ylös, jotta nähdään alert 10000 pikseliä yrittää kelata ylös
 
                     setTimeout(() => {
                         setShowMessage(false)
-                    }, 4000)
-                } //if-lohko 2 päättyy
-            }) //.then päättyy
-            .catch(error => {
-                console.log(error)
-                setMessage(`Tapahtui virhe: ${error}`)
-                setIsPositive(false)
-                setShowMessage(true)
-
-                setTimeout(() => {
-                    setShowMessage(false)
-                }, 7000)
-            })//.catch päättyy
-        } //if-lohko päättyy
-        else { //jos käyttäjä ei vahvistanut poistoa
+                    }, 7000
+                    )
+                })
+        }
+        else { // JOS KÄYTTÄJÄ EI VAHVISTANUT POISTOA:
             setMessage('Poisto peruutettu')
             setIsPositive(true)
             setShowMessage(true)
 
             setTimeout(() => {
                 setShowMessage(false)
-            }, 4000)
-        } //else -lohko päättyy
-    } //handleDeleteClick-lohko päättyy
+            }, 4000
+            )
+        }
+    }
 
-    // RETURN on se, mitä renderöidään ruudulle
-    // Tässä vähän erilaisia ehtolauserakenteita kuin customerissa
+    // RETURN ON AINA SE OSA JOKA RENDERÖIDÄÄN RUUDULLE
+    // Tässä on käytetty osittain vähän erilaisia ehtolauserakenteita kuin Customereissa
 
     // Jos logineja ei ole ehtinyt tulla kannasta stateen
-    // Jos lisäystila ei ole päällä eli on false ja logins-taulukon pituus on 0, palautettaan Logins-header, jonka alla Add new-button
-    // Jos showMessage on true niin näytetään message niiden alla
     if (!lisäysTila && logins.length === 0) {
         return (<>
             <h1><nobr> Logins</nobr>
-            <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
-            {/* jos if:n sisällä halutaan vielä yksi yksittäinen asia laittaa ehdolliseksi */}
-             { showMessage && <Message message={message} isPositive={isPositive} /> }
-             <p>Loading...</p>
-             </>)
-    } //if päättyy
 
-    // Jos statessa on jo kannasta saapuneet loginit ja lisäystila on pois päältä
+                <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
+            { showMessage &&
+                <Message message={message} isPositive={isPositive} />
+            }
+            <p>Loading...</p>
+        </>)
+    }
+
+    // Jos statessa on jo kannasta saapuneet loginit ja lisäystilakin on pois päältä
     if (!lisäysTila && logins) {
         return (
             <>
-             <h1><nobr> Logins</nobr>
-            <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
+                <h1><nobr> Logins</nobr>
 
-            { showMessage && <Message message={message} isPositive={isPositive} /> }
+                    <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
 
-            <table className="loginsListTable">
-                <thead><tr>
-                    <th>Username</th><th>Firstname</th><th>Lastname</th><th>Email</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {/* logins.map, jokaiselle login-oliolle renderöidään login-komponentti */}
-                    {logins.map(login =>
+                { showMessage &&
+                    <Message message={message} isPositive={isPositive} />
+                }
 
-                    <Login key={login.loginId} login={login}
-                    handleDeleteClick={handleDeleteClick} />
-                    )
-                    }
-                </tbody>
-            </table>
+                <table className="loginsListTable">
+                    <thead><tr>
+                        <th>Username</th><th>Firstname</th><th>Lastname</th>
+                        <th>Email</th><th></th>
+                    </tr>
+                    </thead >
+                    <tbody>
+                        {logins.map(login =>
 
+                            <Login key={login.loginId} login={login}
+                                handleDeleteClick={handleDeleteClick} />
+                        )
+                        }
+
+                    </tbody>
+                </table >
             </>
-        ) //return päättyy
-    } // if päättyy
+
+        )
+    }
 
     if (lisäysTila) {
         return (<>
@@ -128,6 +139,6 @@ const LoginList = () => {
         )
     }
 
-} //const LoginList päättyy
 
+}
 export default LoginList

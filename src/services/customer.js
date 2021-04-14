@@ -9,26 +9,51 @@ import axios from 'axios'
 // luodaan tässä muuttuja siksi, että voidaan metodeissa viitata muuttujaan eikä tarvitse aina laittaa erikseen osoitetta
 const baseUrl = "https://localhost:5001/northwind/customer"
 
+let token = null
+
+// Tämä on metodi, jota kutsutaan aina ennen kuin tehdään muu pyyntö serviceen
+// Parametrinä annetaan token, joka otetaan local storagesta
+// ottaa parametriksi newTokenin ja muodostaa stringin jossa on bearer -sana + token-merkkijono 
+const setToken = newToken => {
+    token = `bearer ${newToken}`
+}
+
+// Token liitetään metodeissa mukaan pyyntöön config-objektin muodossa
+
 const getAll = () => {
-    const request = axios.get(baseUrl)
+    const config = {
+        headers: { Authorization: token },
+    }
+    const request = axios.get(baseUrl, config)
     return request.then(response => response.data)
 }
 
 // tänne lähetetään parametrina newCustomer (sen voisi laittaa myös sulkeisiin)
 // ensimmäinen parametri on mihin lähetetään (baseUrl) ja sitten mitä lähetetään (newCustomer)
 const create = newCustomer => {
-    return axios.post(baseUrl, newCustomer)
+    const config = {
+        headers: { Authorization: token },
+    }
+    return axios.post(baseUrl, newCustomer, config)
 }
 
 // deletessä on vain yksi parametri, koko url johon tässä liitettynä id eli esim northwind/customers/AAAYY
-const remove = id => axios.delete(`${baseUrl}/${id}`)
+const remove = id => {
+    const config = {
+        headers: { Authorization: token },
+    }
+    return axios.delete(`${baseUrl}/${id}`, config)
+}
 
 // put pyyntö backendille, ensimmäisenä parametrina url-osoite eli koko url northwind/customer/customerid ja toisena parametrinä se, mitä laitetaan 
 // body-osaaan put pyyntöön eli changedCustomer eli koko muokattu customer-objektic
 const update = changedCustomer => {
-    return axios.put(`${baseUrl}/${changedCustomer.customerId}`, changedCustomer)
+    const config = {
+        headers: { Authorization: token },
+    }   
+    return axios.put(`${baseUrl}/${changedCustomer.customerId}`, changedCustomer, config)
 }
 
 // eslint-disable-next-line
-export default { getAll, create, remove, update }
+export default { getAll, create, remove, update, setToken }
 

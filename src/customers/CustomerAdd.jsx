@@ -42,6 +42,10 @@ const CustomerAdd = ({ setLisäystila, setCustomers, customers, setMessage, setI
             fax: newFax
         }
 
+        // Lähetetään servicelle token ennen kuin tehdään put-pyyntö serviceen
+        const jwt = localStorage.getItem('token')
+        CustomerService.setToken(jwt)
+
         CustomerService
         .create(newCustomer)
         .then(response => { // koska on .then, laitetaan .catch rivillle 60, korvaa siis try-catchin

@@ -36,7 +36,12 @@ const CustomerList = () => {
 // .then(data) otetaan data vastaan aliasoituna data-nimelle
 // setCustomers(data) asetetaan saatu data parametrinä setCustomers-tilaan
 // useEffectin toiseksi parametriksi laitettu näytetäänkö, jolloin datoja voi päivittää klikkaamalla customers-otsikkoa
+// ennen kuin tehdään getAll, katsotaan local storagesta onko siellä token ja jos, otetaan se. Sitten setToken -metodille laitetaan token parametriksi ja sitten vasta getAll
+// jolloin token menee sinne pyyntöjen mukana
     useEffect(() => {
+        const token = localStorage.getItem('token')
+        CustomerService
+            .setToken(token)
         CustomerService
             .getAll()
             .then(data => {
@@ -96,6 +101,10 @@ const CustomerList = () => {
         //jos confirm = true
         // ei try-catchia vaan .then-.catch jos asiakkaan poistossa tapahtuu virhettä, ei ajeta ollenkaan if-lohkoa vaan mennään catchiin.
         if (confirm) {
+
+            // haetaan token local storagesta ja lähetetään parametriksi setToken-metodille
+            const jwt = localStorage.getItem('token')
+            CustomerService.setToken(jwt)
 
             CustomerService.remove(id)
             .then(response => {

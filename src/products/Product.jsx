@@ -1,19 +1,19 @@
 import React, { useState } from 'react'
 import '../App.css'
 
-const Login = ({ login, handleDeleteClick }) => {
+const Product = ({ product }) => {
 
     return (
 
         <>
         {/* HUOM nämä pitää olla samalla tavoin kuin miten backendista data tulee. Esim jos JSONissa tulee username => username, jos firstName =>firstName */}
             <tr>
-                <td>{login.userName}</td>
-                <td>{login.firstname}</td>
-                <td>{login.lastname}</td>
-                <td>{login.email}</td>
+                <td>{product.productName}</td>
+                <td>{product.unitPrice}</td>
+                <td>{product.unitsInStock}</td>
+                <td>{product.categoryId}</td>
                 <td>
-                    <button className="nappi" onClick={() => handleDeleteClick(login.loginId)}>Delete</button>
+                    <button className="nappi">Delete</button>
                 </td>
             </tr>
         </>
@@ -22,4 +22,4 @@ const Login = ({ login, handleDeleteClick }) => {
 
 } // const Login päättyy
 
-export default Login
+export default Product
