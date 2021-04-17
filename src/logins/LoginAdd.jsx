@@ -16,7 +16,7 @@ const LoginAdd = ({ setLisäystila, setLogins, logins, setMessage, setShowMessag
         const [newEmail, setNewEmail] = useState('')
         const [newAccesslevelId, setNewAccesslevelId] = useState(0) // Numeroarvo alustukseen!
 
-        const submitCustomer = (event) => {
+        const submitLogin = (event) => {
             event.preventDefault()
             // Jos salasanat ei täsmää, palauttaa alertin ja pysähdytään tähän, tyhjennetään salasanakentät
             if (newPassword !== passwordAgain) {
@@ -69,7 +69,7 @@ const LoginAdd = ({ setLisäystila, setLogins, logins, setMessage, setShowMessag
         } // submitCustomer päättyy
 
         return (
-            <form onSubmit={submitCustomer}>
+            <form onSubmit={submitLogin}>
                 <div>
                 <input type="text" value={newUserName} placeholder="Username" 
                 onChange={({ target }) => setNewUsername(target.value)} required/>

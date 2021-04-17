@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import '../App.css'
 
-const Employee = ({ employee }) => {
+const Employee = ({ employee, handleDeleteClick, handleEditClick }) => {
 
     return (
 
@@ -13,7 +13,8 @@ const Employee = ({ employee }) => {
                 <td>{employee.title}</td>
                 <td>{employee.city}</td>
                 <td>
-                    <button className="nappi">Delete</button>
+                <button className="nappi" onClick={() => handleDeleteClick(employee.employeeId)}>Delete</button>
+                <button className="nappi" onClick={() => handleEditClick(employee)}>Edit</button>
                 </td>
             </tr>
         </>

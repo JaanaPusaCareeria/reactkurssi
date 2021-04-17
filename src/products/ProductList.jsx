@@ -3,12 +3,16 @@ import '../App.css'
 import ProductService from '../services/product'
 import Product from './Product'
 import ProductAdd from './ProductAdd'
+import ProductEdit from './ProductEdit'
 import Message from '../Message'
 
 const ProductList = () => {
 
     const [products, setProducts] = useState([]) // tietotyyppi on taulukko
     const [lisäysTila, setLisäystila] = useState(false)
+
+    const [muokkausTila, setMuokkaustila] = useState(false)
+    const [muokattavaProduct, setMuokattavaProduct] = useState({}) 
 
     const [showMessage, setShowMessage] = useState(false)
     const [isPositive, setIsPositive] = useState(false)
@@ -21,7 +25,49 @@ const ProductList = () => {
                 console.log(data)
                 setProducts(data)
             })
-    }, [lisäysTila])
+    }, [lisäysTila, muokkausTila])
+
+    const handleDeleteClick = id => {
+
+        const product = products.find(product => product.productId === id)
+        const confirm = window.confirm(`Haluatko todella poistaa: ${product.productName}:n pysyvästi?`)
+
+        if (confirm) {
+            ProductService.remove(id)
+                .then(response => {
+                    if (response.status === 200) {
+                        setProducts(products.filter(filtered => filtered.productId !== id))
+                        setMessage(`${Product.productName}:n poisto onnistui!`)
+                        setIsPositive(true)
+                        setShowMessage(true)
+                        window.scrollBy(0, -10000) // Scrollataan ylös jotta nähdään alert :)
+
+                        setTimeout(() => {
+                            setShowMessage(false)
+                        }, 4000 )
+                    } //if
+                }) //.then
+                .catch(error => {
+                    console.log(error)
+                    setMessage(`Tapahtui virhe: ${error}`)
+                    setIsPositive(false)
+                    setShowMessage(true)
+
+                    setTimeout(() => {
+                        setShowMessage(false)
+                    }, 7000 )
+                }) //.catch
+        } //if
+        else { 
+            setMessage('Poisto peruutettu')
+            setIsPositive(true)
+            setShowMessage(true)
+
+            setTimeout(() => {
+                setShowMessage(false)
+            }, 4000 )
+        } //else
+    } //handleDeleteClick
 
     if (!lisäysTila && products.length === 0) {
         return (<>
