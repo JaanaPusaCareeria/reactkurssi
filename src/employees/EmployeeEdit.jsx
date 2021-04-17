@@ -137,7 +137,7 @@ const EmployeeEdit = ({ setMuokkaustila, setEmployees, employees, setMessage, se
                         onChange={({ target }) => setNewExtension(target.value)} />
                 </div>
 
-                <button className="nappi" type="submit" style={{ background: 'green'}}>Create</button>
+                <button className="nappi" type="submit" style={{ background: 'green'}}>Save</button>
 
                 <button className="nappi" onClick={() => setMuokkaustila(false)} style={{ background: 'red '}}>Cancel</button>
 

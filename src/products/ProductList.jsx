@@ -37,7 +37,7 @@ const ProductList = () => {
                 .then(response => {
                     if (response.status === 200) {
                         setProducts(products.filter(filtered => filtered.productId !== id))
-                        setMessage(`${Product.productName}:n poisto onnistui!`)
+                        setMessage(`${product.productName}:n poisto onnistui!`)
                         setIsPositive(true)
                         setShowMessage(true)
                         window.scrollBy(0, -10000) // Scrollataan ylös jotta nähdään alert :)
@@ -69,24 +69,25 @@ const ProductList = () => {
         } //else
     } //handleDeleteClick
 
-    if (!lisäysTila && products.length === 0) {
+    const handleEditClick = product => {
+        setMuokattavaProduct(product)
+        setMuokkaustila(true)
+    }
+
+    if (!lisäysTila && !muokkausTila && products.length === 0) {
         return (<>
             <h1><nobr> products</nobr>
-
-                <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
+            <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
             { showMessage && <Message message={message} isPositive={isPositive} /> }
-            
             <p>Loading...</p>
         </>)
     }
 
-    if (!lisäysTila && products) {
+    if (!lisäysTila && !muokkausTila && products) {
         return (
             <>
                 <h1><nobr> products</nobr>
-
-                    <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
-
+                <button className="nappi" onClick={() => setLisäystila(true)}>Add new</button></h1>
                 { showMessage && <Message message={message} isPositive={isPositive} /> }
 
                 <table className="productListTable">
@@ -96,27 +97,33 @@ const ProductList = () => {
                     </tr>
                     </thead >
                     <tbody>
-                        {products.map(product => <Product key={product.productId} product={product} /> )}
-
+                        {products.map(product => <Product key={product.productId} product={product} handleDeleteClick={handleDeleteClick} handleEditClick={handleEditClick} /> )}
                     </tbody>
                 </table >
             </>
-
-        )
+        ) //return
     }
 
     if (lisäysTila) {
         return (<>
             <h1>Products</h1>
-            { showMessage &&
-                <Message message={message} isPositive={isPositive} />
-            }
+            { showMessage && <Message message={message} isPositive={isPositive} /> }
             <ProductAdd setLisäystila={setLisäystila} products={products} setProducts={setProducts} setMessage={setMessage} setShowMessage={setShowMessage}
                 setIsPositive={setIsPositive} />
-        </>
-        )
+        </> 
+        ) //return
     }
 
+    if (muokkausTila) {
+         return (
+         <>
+             <h1>Products</h1>
+             { showMessage && <Message message={message} isPositive={isPositive} /> }
+             <ProductEdit setMuokkaustila={setMuokkaustila} muokattavaProduct={muokattavaProduct} products={products} setProducts={setProducts} setMessage={setMessage} setShowMessage={setShowMessage}
+                 setIsPositive={setIsPositive} />
+         </>
+         )
+     }
+} //Productlist
 
-}
 export default ProductList

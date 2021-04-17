@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import '../App.css'
 
-const Product = ({ product }) => {
+const Product = ({ product, handleDeleteClick, handleEditClick }) => {
 
     return (
 
@@ -13,7 +13,8 @@ const Product = ({ product }) => {
                 <td>{product.unitsInStock}</td>
                 <td>{product.categoryId}</td>
                 <td>
-                    <button className="nappi">Delete</button>
+                    <button className="nappi" onClick={() => handleDeleteClick(product.productId)}>Delete</button>
+                    <button className="nappi" onClick={() => handleEditClick(product)}>Edit</button>
                 </td>
             </tr>
         </>

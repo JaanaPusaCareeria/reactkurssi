@@ -123,8 +123,8 @@ const EmployeeList = () => {
         <>
             <h1>Employees</h1>
             { showMessage && <Message message={message} isPositive={isPositive} /> }
-            {muokkausTila && <EmployeeEdit setMuokkaustila={setMuokkaustila} muokattavaEmployee={muokattavaEmployee} employees={employees} setEmployees={setEmployees} setMessage={setMessage} setShowMessage={setShowMessage}
-            setIsPositive={setIsPositive} />} 
+            <EmployeeEdit setMuokkaustila={setMuokkaustila} muokattavaEmployee={muokattavaEmployee} employees={employees} setEmployees={setEmployees} setMessage={setMessage} setShowMessage={setShowMessage}
+            setIsPositive={setIsPositive} />
         </>
         )//return
     }//if

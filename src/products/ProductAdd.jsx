@@ -1,57 +1,44 @@
 import React, { useState } from 'react'
 import '../App.css'
-import EmployeeService from '../services/employee'
+import ProductService from '../services/product'
 
-const EmployeeAdd = ({ setLisäystila, setEmployees, employees, setMessage, setShowMessage, setIsPositive }) => {
+const ProductAdd = ({ setLisäystila, setProducts, products, setMessage, setShowMessage, setIsPositive }) => {
 
         // State-määritykset, id:tä ei anneta vaan tietokanta luo sen
-        const [newLastName, setNewLastName] = useState('')
-        const [newFirstName, setNewFirstName] = useState('')
-        const [newTitle, setNewTitle] = useState('')
-        const [newTitleOfCourtesy, setNewTitleOfCourtesy] = useState('')
-        const [newBirthDate, setNewBirthDate] = useState('') 
-        const [newHireDate, setNewHireDate] = useState('')
-        const [newAddress, setNewAddress] = useState('')
-        const [newCity, setNewCity] = useState('')
-        const [newRegion, setNewRegion] = useState('')
-        const [newPostalCode, setNewPostalCode] = useState('')
-        const [newCountry, setNewCountry] = useState('')
-        const [newHomePhone, setNewHomePhone] = useState('')
-        const [newExtension, setNewExtension] = useState('')
-        // const [newNotes, setNewNotes] = useState('')
-        // const [newReportsTo, setNewReportsTo] = useState('')
-        // const [newPhotoPath, setNewPhotoPath] = useState('')
+        const [newProductName, setNewProductName] = useState('')
+        const [newSupplierId, setNewSupplierId] = useState(0)
+        const [newCategoryId, setNewCategoryId] = useState(0)
+        const [newQuantityPerUnit, setNewQuantityPerUnit] = useState('')
+        const [newUnitPrice, setNewUnitPrice] = useState(0) 
+        const [newUnitsInStock, setNewUnitsInStock] = useState(0)
+        const [newUnitsOnOrder, setNewUnitsOnOrder] = useState(0)
+        const [newReorderLevel, setNewReorderLevel] = useState(0)
+        // const [newDiscontinued, setNewDiscontinued] = useState(0)
 
-        const submitEmployee = (event) => {
+        const submitProduct = (event) => {
             event.preventDefault()
-            var newEmployee = {
-                lastName: newLastName,
-                firstName: newFirstName,
-                title: newTitle,
-                titleOfCourtesy: newTitleOfCourtesy,
-                birthDate: newBirthDate,
-                hireDate: newHireDate,
-                address: newAddress,
-                city: newCity,
-                region: newRegion,
-                postalCode: newPostalCode,
-                country: newCountry,
-                homePhone: newHomePhone,
-                extension: newExtension
-                // reportsTo: newReportsTo,
-                // photoPath: newPhotoPath
+            var newProduct = {
+                productName: newProductName,
+                supplierId: newSupplierId,
+                categoryId: newCategoryId,
+                quantityPerUnit: newQuantityPerUnit,
+                unitPrice: newUnitPrice,
+                unitsInStock: newUnitsInStock,
+                unitsOnOrder: newUnitsOnOrder,
+                reorderLevel: newReorderLevel
+                // discontinued: newDiscontinued,
+                // imageLink: newImageLink
             } 
 
-            console.log(newEmployee)
+            console.log(newProduct)
 
-            EmployeeService
-                .create(newEmployee)
+            ProductService
+                .create(newProduct)
                 .then(response => {
 
                     if (response.status === 200) {
-                        setEmployees(employees.concat(newEmployee))
-
-                        setMessage(`Lisätty ${newEmployee.lastName}`)
+                        setProducts(products.concat(newProduct))
+                        setMessage(`Lisätty ${newProduct.productName}`)
                         setIsPositive(true)
                         setShowMessage(true)
 
@@ -77,72 +64,55 @@ const EmployeeAdd = ({ setLisäystila, setEmployees, employees, setMessage, setS
         } // submit
 
         return (
-            <form onSubmit={submitEmployee}>
+            <form onSubmit={submitProduct}>
                 <div>
-                <input type="text" value={newLastName} placeholder="Lastname" 
-                onChange={({ target }) => setNewLastName(target.value)} required/>
+                <input type="text" value={newProductName} placeholder="Productname" 
+                onChange={({ target }) => setNewProductName(target.value)} required/>
                 </div>
                 <div>
-                <input type="text" value={newFirstName} placeholder="Firsname" 
-                onChange={({ target }) => setNewFirstName(target.value)} required/>
+                <p>Supplier ID</p>
+                <input type="number" value={newSupplierId} placeholder="Supplier id" 
+                onChange={({ target }) => setNewSupplierId(target.value)}/>
                 </div>
                 <div>
-                    <input type="text" value={newTitle} placeholder="Title"
-                    onChange={({ target }) => setNewTitle(target.value)}/>
+                    <p>Category ID</p>
+                    <input type="number" value={newCategoryId} placeholder="Category id"
+                    onChange={({ target }) => setNewCategoryId(target.value)}/>
                 </div>
                 <div>
-                    <input type="text" value={newTitleOfCourtesy} placeholder="Title of courtesy"
-                    onChange={({ target }) => setNewTitleOfCourtesy(target.value)}/>
+                    <input type="text" value={newQuantityPerUnit} placeholder="Quantity per unit"
+                    onChange={({ target }) => setNewQuantityPerUnit(target.value)}/>
                 </div>
                 <div>
-                    <input type="date" value={newBirthDate} placeholder="Birthdate"
-                    onChange={({ target }) => setNewBirthDate(target.value)}/>
+                    <p>Unit price</p>
+                    <input type="number" value={newUnitPrice} placeholder="Unit price"
+                    onChange={({ target }) => setNewUnitPrice(target.value)}/>
                 </div>
                 <div>
-                    <input type="date" value={newHireDate} placeholder="Hiredate"
-                    onChange={({ target }) => setNewHireDate(target.value)}/>
+                    <p>Units in stock</p>
+                    <input type="number" value={newUnitsInStock} placeholder="Units in stock"
+                    onChange={({ target }) => setNewUnitsInStock(target.value)}/>
                 </div>
                 <div>
-                    <input type="text" value={newAddress} placeholder="Address"
-                    onChange={({ target }) => setNewAddress(target.value)}/>
+                    <p>Units on order</p>
+                    <input type="number" value={newUnitsOnOrder} placeholder="Units on order"
+                    onChange={({ target }) => setNewUnitsOnOrder(target.value)}/>
                 </div>
                 <div>
-                    <input type="text" value={newCity} placeholder="City"
-                    onChange={({ target }) => setNewCity(target.value)}/>
-                </div>
-                <div>
-                    <input type="text" value={newRegion} placeholder="Region"
-                    onChange={({ target }) => setNewRegion(target.value)}/>
-                </div>
-                <div>
-                    <input type="text" value={newPostalCode} placeholder="Postal code"
-                    onChange={({ target }) => setNewPostalCode(target.value)}/>
-                </div>
-                <div>
-                    <input type="text" value={newCountry} placeholder="Country"
-                    onChange={({ target }) => setNewCountry(target.value)}/>
-                </div>              
-                <div>
-                    <input type="text" value={newHomePhone} placeholder="Home phonenumber"
-                    onChange={({ target }) => setNewHomePhone(target.value)}/>
-                </div>
-                <div>
-                    <input type="text" value={newExtension} placeholder="Extension"
-                    onChange={({ target }) => setNewExtension(target.value)} />
+                    <p>Reorder level</p>
+                    <input type="number" value={newReorderLevel} placeholder="Reorder level"
+                    onChange={({ target }) => setNewReorderLevel(target.value)}/>
                 </div>
                 {/* <div>
-                    <input type="text" value={newReportsTo} placeholder="Reports to"
-                    onChange={({ target }) => setNewReportsTo(target.value)}/>
-                </div>
-                <div>
-                    <input type="text" value={newPhotoPath} placeholder="Photopath"
-                    onChange={({ target }) => setNewPhotoPath(target.value)}/>
+                    <input type="text" value={newDiscontinued} placeholder="Discontinued"
+                    onChange={({ target }) => setNewDiscontinued(target.value)}/>
+                </div> */}
+                {/* <div>
+                    <input type="text" value={newImageLink} placeholder="Imagelink"
+                    onChange={({ target }) => setNewImageLink(target.value)}/>
                 </div> */}
 
-                {/* tällä subnmitoidaan koko form */}
                 <button className="nappi" type="submit" style={{ background: 'green'}}>Create</button>
-
-                {/* cancel-buttonissa on setLisäysTila(false), jolloin palataan asiakasnäyttöön */}
                 <button className="nappi" onClick={() => setLisäystila(false)} style={{ background: 'red '}}>Cancel</button>
 
             </form>
@@ -152,4 +122,4 @@ const EmployeeAdd = ({ setLisäystila, setEmployees, employees, setMessage, setS
 
 } //LoginAdd päättyy
 
-export default EmployeeAdd
+export default ProductAdd
